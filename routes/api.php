@@ -44,10 +44,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/delete-image', [AuthController::class, 'deleteImage']);
     // user info
     Route::get('/users', [AuthController::class, 'userInfo']);
+     Route::get('/users', [AuthController::class, 'update']);
     //post Route
     Route::apiResource('posts', PostController::class);
     //comment route
-    Route::apiResource('comments', CommentController::class);
+    //Route::apiResource('comments', CommentController::class);
+    Route::get('/posts/{post_id}/comments', [CommentController::class, 'index']);//get comments for a post
+    Route::post('/posts/{post_id}/comments', [CommentController::class, 'store']);//store a comment for a post
+    Route::put('/comments/{comment_id}', [CommentController::class, 'update']);//update a comment
+    Route::delete('/comments/{comment_id}', [CommentController::class, 'destroy']);//delete a comment
     //like Rout
-    Route::apiResource('likes', LikeController::class);
+    Route::post('/posts/{post_id}/like',[LikeController::class, 'likedOrDisliked']);
 });

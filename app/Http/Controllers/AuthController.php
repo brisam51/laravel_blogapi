@@ -81,5 +81,28 @@ class AuthController extends Controller
         return response()->json(['message' => 'User info failed'], 500);
     }
    }
+//update user info
+    public function updateUser(Request $request)
+    {
+        try{
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'sometimes|required|string|email|max:255|unique:users,email,'.$request->id,
+            ]);
+            if(!Auth::check()){
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+                    $image = $this->saveImage($request->image, 'profiles');
 
+            $user = new User;
+           
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->image = $image;
+            $user->save();
+            return response()->json(['message' => 'User updated successfully']);
+        }catch(Exception $e){
+            return response()->json(['message' => 'Update user failed'], 500);
+        }
+    }
 }//end class
